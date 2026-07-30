@@ -1,10 +1,10 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
-import { LoginPage } from "@/features/auth/LoginPage";
-import { RegisterPage } from "@/features/auth/RegisterPage";
-import { ProjectListPage } from "@/features/projects/ProjectListPage";
-import { TaskBoardPage } from "@/features/tasks/TaskBoardPage";
+import { LoginPage } from "@/features/auth/pages/LoginPage";
+import { RegisterPage } from "@/features/auth/pages/RegisterPage";
+import { ProjectListPage } from "@/features/projects/pages/ProjectListPage";
+import { TaskBoardPage } from "@/features/tasks/pages/TaskBoardPage";
 
 export function AppRoutes() {
   return (
