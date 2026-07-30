@@ -105,6 +105,7 @@ export async function addMember(
   requesterRole: string,
   memberIdToAdd: string,
 ) {
+  console.log(projectId, requesterId, requesterRole, memberIdToAdd);
   const project = await Project.findById(projectId);
   if (!project) {
     throw new AppError("Project not found", 404);
@@ -129,6 +130,15 @@ export async function addMember(
   project.members.push(new Types.ObjectId(memberIdToAdd));
   await project.save();
   return project;
+}
+
+export async function getMembers(
+  projectId: string,
+  userId: string,
+  userRole: string,
+) {
+  const project = await getProjectById(projectId, userId, userRole);
+  return project.members;
 }
 
 export async function removeMember(

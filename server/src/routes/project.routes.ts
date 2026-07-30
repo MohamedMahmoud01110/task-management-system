@@ -14,15 +14,20 @@ router.use(protect);
 
 router.post("/", validate(createProjectSchema), projectController.create);
 router.get("/", projectController.getAll);
-router.get("/:id", projectController.getOne);
-router.patch("/:id", validate(updateProjectSchema), projectController.update);
-router.delete("/:id", projectController.remove);
+router.get("/:projectId", projectController.getOne);
+router.patch("/:projectId", validate(updateProjectSchema), projectController.update);
+router.delete("/:projectId", projectController.remove);
 
 router.post(
-  "/:id/members",
+  "/:projectId/members",
   validate(addMemberSchema),
   projectController.addMember,
 );
-router.delete("/:id/members/:userId", projectController.removeMember);
+
+router.get(
+  "/:projectId/members",
+  projectController.getMembers,
+);
+router.delete("/:projectId/members/:userId", projectController.removeMember);
 
 export default router;

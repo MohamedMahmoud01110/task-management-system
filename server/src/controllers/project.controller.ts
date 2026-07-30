@@ -32,7 +32,7 @@ export async function getAll(req: Request, res: Response, next: NextFunction) {
 export async function getOne(req: Request, res: Response, next: NextFunction) {
   try {
     const project = await projectService.getProjectById(
-      req.params.id as string,
+      req.params.projectId as string,
       req.user!.userId,
       req.user!.role,
     );
@@ -45,7 +45,7 @@ export async function getOne(req: Request, res: Response, next: NextFunction) {
 export async function update(req: Request, res: Response, next: NextFunction) {
   try {
     const project = await projectService.updateProject(
-      req.params.id as string,
+      req.params.projectId as string,
       req.user!.userId,
       req.user!.role,
       req.body,
@@ -63,7 +63,7 @@ export async function update(req: Request, res: Response, next: NextFunction) {
 export async function remove(req: Request, res: Response, next: NextFunction) {
   try {
     await projectService.deleteProject(
-      req.params.id as string,
+      req.params.projectId as string,
       req.user!.userId,
       req.user!.role,
     );
@@ -82,7 +82,7 @@ export async function addMember(
 ) {
   try {
     const project = await projectService.addMember(
-      req.params.id as string,
+      req.params.projectId as string,
       req.user!.userId,
       req.user!.role,
       req.body.userId,
@@ -97,6 +97,19 @@ export async function addMember(
   }
 }
 
+export async function  getMembers(req: Request, res: Response, next: NextFunction) {
+  try {
+    const members = await projectService.getMembers(
+      req.params.projectId as string,
+      req.user!.userId,
+      req.user!.role,
+    );
+    res.status(200).json({ success: true, data: members });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function removeMember(
   req: Request,
   res: Response,
@@ -104,7 +117,7 @@ export async function removeMember(
 ) {
   try {
     const project = await projectService.removeMember(
-      req.params.id as string,
+      req.params.projectId as string,
       req.user!.userId,
       req.user!.role,
       req.params.userId as string,
