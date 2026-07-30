@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import * as projectService from "../services/project.service";
-import { success } from "zod";
 
 export async function create(req: Request, res: Response, next: NextFunction) {
   try {

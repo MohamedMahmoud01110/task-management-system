@@ -4,8 +4,11 @@ export interface Project {
   _id: string;
   name: string;
   description?: string;
-  owner: User | string;
-  members: User[] | string[];
+
+  owner: User;
+
+  members: User[];
+
   createdAt: string;
   updatedAt: string;
 }

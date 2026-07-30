@@ -11,8 +11,8 @@ export async function getProjectsApi(): Promise<Project[]> {
   return res.data.data;
 }
 
-export async function getProjectByIdApi(id: string): Promise<Project> {
-  const res = await axiosClient.get<ApiResponse<Project>>(`/projects/${id}`);
+export async function getProjectByIdApi(projectId: string): Promise<Project> {
+  const res = await axiosClient.get<ApiResponse<Project>>(`/projects/${projectId}`);
   return res.data.data;
 }
 

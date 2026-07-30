@@ -1,4 +1,6 @@
+import { UserRole } from "../enums/UserRole";
 import { Project } from "../models/project.model";
+import { User } from "../models/user.model";
 import { AppError } from "../utils/AppError";
 import {
   CreateProjectInput,
@@ -103,9 +105,9 @@ export async function addMember(
   projectId: string,
   requesterId: string,
   requesterRole: string,
-  memberIdToAdd: string,
+  memberEmail: string,
 ) {
-  console.log(projectId, requesterId, requesterRole, memberIdToAdd);
+  console.log(projectId, requesterId, requesterRole, memberEmail);
   const project = await Project.findById(projectId);
   if (!project) {
     throw new AppError("Project not found", 404);
@@ -120,14 +122,23 @@ export async function addMember(
     );
   }
 
+  const user = await User.findOne({ email: memberEmail });
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+  
+  if (user.role !== UserRole.MEMBER) {
+    throw new AppError("User is not a member of this project", 409);
+  }
+
   const alreadyMember = project.members.some(
-    (m) => m.toString() === memberIdToAdd,
+    (m) => m._id.toString() === user._id.toString(),
   );
   if (alreadyMember) {
     throw new AppError("User is already a member of this project", 409);
   }
 
-  project.members.push(new Types.ObjectId(memberIdToAdd));
+  project.members.push(user._id);
   await project.save();
   return project;
 }
