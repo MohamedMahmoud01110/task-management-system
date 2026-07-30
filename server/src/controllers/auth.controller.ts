@@ -8,7 +8,7 @@ export async function register(
 ) {
   try {
     const result = await registerUser(req.body);
-    res.status(201).json({ success: true, data: result });
+    res.status(201).json({ success: true, message: "User registered successfully" ,result});
   } catch (err) {
     next(err);
   }
