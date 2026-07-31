@@ -26,8 +26,8 @@ The application allows teams to manage projects, assign members, create tasks, t
 - Update Project
 - Delete Project
 - Project Details
-- Add Members (Admin Only)
-- Remove Members (Admin Only)
+- Add Members (Project Owner or Admin)
+- Remove Members (Project Owner or Admin)
 
 ---
 
@@ -62,7 +62,10 @@ Supported Filters:
 - Priority
 - Assignee
 
----
+### Task Audit Log
+
+- Automatic tracking of task status changes
+- View full status change history per task (who changed it, from what status to what status, and when)
 
 ## Admin Dashboard
 
@@ -157,16 +160,16 @@ task-management-system
 
 ## Admin
 
-- Manage Projects
-- Add Members
-- Remove Members
-- Create/Edit/Delete Tasks
+- View and manage all projects in the system (even ones they are not a member of)
+- Add/Remove members on any project
 - View Admin Dashboard
+- Note: Admins are not added as project members; their role is administrative only
 
 ## Member
 
-- View Assigned Projects
-- Manage Tasks within Accessible Projects
+- Create projects (becomes the project Owner automatically)
+- As Project Owner: update/delete the project, add/remove members
+- As a regular member: manage tasks within accessible projects
 
 ---
 
@@ -175,7 +178,7 @@ task-management-system
 - Only authenticated users can access protected APIs.
 - Users only see projects they have access to.
 - Unauthorized users cannot modify projects or tasks.
-- Only Admins can manage project members.
+- Only the project owner or an admin can manage project members, update, or delete a project.
 - JWT is required for protected endpoints.
 
 ---

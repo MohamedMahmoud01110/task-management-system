@@ -533,18 +533,28 @@
                 }
               ]
             },
-            "method": "GET",
+            "method": "PATCH",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\":\"done\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "{{url}}/api/projects/6a6ace0668b5701acc70ff37/tasks",
+              "raw": "{{url}}/api/projects/6a6ac39bec6e69fe8b0c62b0/tasks/6a6c055e13d57838136ab7f9",
               "host": [
                 "{{url}}"
               ],
               "path": [
                 "api",
                 "projects",
-                "6a6ace0668b5701acc70ff37",
-                "tasks"
+                "6a6ac39bec6e69fe8b0c62b0",
+                "tasks",
+                "6a6c055e13d57838136ab7f9"
               ]
             }
           },
@@ -683,6 +693,38 @@
                   "key": "priority",
                   "value": "high"
                 }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get task update audit logs",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/api/projects/6a6ac39bec6e69fe8b0c62b0/tasks/6a6c055e13d57838136ab7f9/audit-log",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "6a6ac39bec6e69fe8b0c62b0",
+                "tasks",
+                "6a6c055e13d57838136ab7f9",
+                "audit-log"
               ]
             }
           },
