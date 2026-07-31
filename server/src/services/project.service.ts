@@ -6,7 +6,6 @@ import {
   CreateProjectInput,
   UpdateProjectInput,
 } from "../validators/project.validator";
-import { Types } from "mongoose";
 
 export async function createProject(
   input: CreateProjectInput,
@@ -22,10 +21,56 @@ export async function createProject(
   return project;
 }
 
-export async function getUserProjects(userId: string, userRole: string) {
-  const filter = userRole === "admin" ? {} : { members: userId };
-  const projects = await Project.find(filter).populate("owner", "name email");
-  return projects;
+export async function getUserProjects(
+  userId: string,
+  userRole: string,
+  query: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    sort?: string;
+  },
+) {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const filter: Record<string, unknown> = {};
+
+  if (userRole !== "admin") {
+    filter.members = userId;
+  }
+
+  if (query.search) {
+    filter.name = {
+      $regex: query.search,
+      $options: "i",
+    };
+  }
+
+  const sort =
+    query.sort === "oldest"
+      ? { createdAt: 1 as const }
+      : { createdAt: -1 as const };
+  const [projects, total] = await Promise.all([
+    Project.find(filter)
+      .populate("owner", "name email")
+      .sort(sort)
+      .skip(skip)
+      .limit(limit),
+
+    Project.countDocuments(filter),
+  ]);
+
+  return {
+    data: projects,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 }
 export async function getProjectById(
   projectId: string,
@@ -107,7 +152,6 @@ export async function addMember(
   requesterRole: string,
   memberEmail: string,
 ) {
-  console.log(projectId, requesterId, requesterRole, memberEmail);
   const project = await Project.findById(projectId);
   if (!project) {
     throw new AppError("Project not found", 404);
@@ -126,7 +170,7 @@ export async function addMember(
   if (!user) {
     throw new AppError("User not found", 404);
   }
-  
+
   if (user.role !== UserRole.MEMBER) {
     throw new AppError("User is not a member of this project", 409);
   }

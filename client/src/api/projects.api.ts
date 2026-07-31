@@ -6,13 +6,37 @@ import type {
 } from "@/types/project.types";
 import type { ApiResponse } from "@/types/api.types";
 
-export async function getProjectsApi(): Promise<Project[]> {
-  const res = await axiosClient.get<ApiResponse<Project[]>>("/projects");
-  return res.data.data;
+export interface ProjectsQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sort?: "newest" | "oldest";
+}
+
+export interface PaginatedProjectsResponse {
+  data: Project[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export async function getProjectsApi(
+  query: ProjectsQuery,
+): Promise<PaginatedProjectsResponse> {
+  const res = await axiosClient.get("/projects", {
+    params: query,
+  });
+
+  return res.data;
 }
 
 export async function getProjectByIdApi(projectId: string): Promise<Project> {
-  const res = await axiosClient.get<ApiResponse<Project>>(`/projects/${projectId}`);
+  const res = await axiosClient.get<ApiResponse<Project>>(
+    `/projects/${projectId}`,
+  );
   return res.data.data;
 }
 
@@ -43,15 +67,14 @@ export async function deleteProjectApi(id: string): Promise<void> {
 
 export async function addMemberApi(
   projectId: string,
-  userId: string,
+  email: string,
 ): Promise<Project> {
-  const res = await axiosClient.post<ApiResponse<Project>>(
-    `/projects/${projectId}/members`,
-    { userId },
-  );
+  const res = await axiosClient.post(`/projects/${projectId}/members`, {
+    email,
+  });
+
   return res.data.data;
 }
-
 export async function removeMemberApi(
   projectId: string,
   userId: string,

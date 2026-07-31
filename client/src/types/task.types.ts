@@ -20,10 +20,10 @@ export interface Task {
 export interface CreateTaskPayload {
   title: string;
   description?: string;
-  status?: TaskStatus;
-  priority?: TaskPriority;
+  status: TaskStatus;
+  priority: TaskPriority;
   dueDate?: string;
-  assignee?: string;
+  assignee: string;
 }
 
 export type UpdateTaskPayload = Partial<CreateTaskPayload>;

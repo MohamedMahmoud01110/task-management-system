@@ -4,8 +4,8 @@ import { PublicRoute } from "./PublicRoute";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { RegisterPage } from "@/features/auth/pages/RegisterPage";
 import { ProjectListPage } from "@/features/projects/pages/ProjectListPage";
-import { TaskBoardPage } from "@/features/tasks/pages/TaskBoardPage";
 import { ProjectDetailsPage } from "@/features/projects/pages/ProjectDetailsPage";
+import { AdminDashboardPage } from "@/features/admin/pages/AdminDashboardPage";
 
 export function AppRoutes() {
   return (
@@ -18,7 +18,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route path="/projects" element={<ProjectListPage />} />
         <Route path="/projects/:projectId" element={<ProjectDetailsPage />} />
-        <Route path="/projects/:projectId/tasks" element={<TaskBoardPage />} />
+        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />{" "}
       </Route>
 
       <Route path="/" element={<Navigate to="/projects" replace />} />

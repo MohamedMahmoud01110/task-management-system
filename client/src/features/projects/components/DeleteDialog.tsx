@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
 import {
   AlertDialog,
@@ -11,7 +11,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-type DeleteType = "project" | "member";
+import { Button } from "@/components/ui/button";
+
+type DeleteType = "project" | "member" | "task";
 
 interface DeleteDialogProps {
   open: boolean;
@@ -21,6 +23,7 @@ interface DeleteDialogProps {
   type: DeleteType;
   name?: string;
 }
+
 export function DeleteDialog({
   open,
   onOpenChange,
@@ -29,33 +32,66 @@ export function DeleteDialog({
   type,
   name,
 }: DeleteDialogProps) {
-  const isProject = type === "project";
+  const title =
+    type === "project"
+      ? "Delete Project"
+      : type === "member"
+        ? "Remove Member"
+        : "Delete Task";
+
+  const description =
+    type === "project" ? (
+      <>
+        This action cannot be undone.
+        <br />
+        This will permanently delete this project and all associated tasks.
+      </>
+    ) : type === "member" ? (
+      <>
+        Are you sure you want to remove <strong>{name}</strong> from this
+        project?
+        <br />
+        This action cannot be undone.
+      </>
+    ) : (
+      <>
+        Are you sure you want to delete <strong>{name ?? "this task"}</strong>?
+        <br />
+        This action cannot be undone.
+      </>
+    );
+
+  const buttonText =
+    type === "project"
+      ? "Delete Project"
+      : type === "member"
+        ? "Remove Member"
+        : "Delete Task";
+
+  const loadingText =
+    type === "project"
+      ? "Deleting..."
+      : type === "member"
+        ? "Removing..."
+        : "Deleting...";
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
-            {isProject ? "Delete Project" : "Remove Member"}
-          </AlertDialogTitle>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => onOpenChange(false)}
+            className="absolute right-4 top-4"
+          >
+            <X className="h-4 w-4" />
+          </Button>
 
-          <AlertDialogDescription>
-            {isProject ? (
-              <>
-                This action cannot be undone.
-                <br />
-                This will permanently delete this project and all associated
-                tasks.
-              </>
-            ) : (
-              <>
-                Are you sure you want to remove <strong>{name}</strong> from
-                this project?
-                <br />
-                This action cannot be undone.
-              </>
-            )}
-          </AlertDialogDescription>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+
+          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
@@ -72,12 +108,10 @@ export function DeleteDialog({
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {isProject ? "Deleting..." : "Removing..."}
+                {loadingText}
               </>
-            ) : isProject ? (
-              "Delete Project"
             ) : (
-              "Remove Member"
+              buttonText
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

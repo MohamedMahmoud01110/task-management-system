@@ -9,13 +9,11 @@ export async function create(req: Request, res: Response, next: NextFunction) {
       req.user!.role,
       req.body,
     );
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Task created successfully",
-        data: task,
-      });
+    res.status(201).json({
+      success: true,
+      message: "Task created successfully",
+      data: task,
+    });
   } catch (err) {
     next(err);
   }
@@ -24,13 +22,18 @@ export async function create(req: Request, res: Response, next: NextFunction) {
 export async function getAll(req: Request, res: Response, next: NextFunction) {
   try {
     const filters = (req as any).validatedQuery || {};
-    const tasks = await taskService.getProjectTasks(
+    const result = await taskService.getProjectTasks(
       req.params.projectId as string,
       req.user!.userId,
       req.user!.role,
       filters,
     );
-    res.status(200).json({ success: true, total: tasks.length, data: tasks });
+
+    res.status(200).json({
+      success: true,
+      data: result.data,
+      pagination: result.pagination,
+    });
   } catch (err) {
     next(err);
   }
@@ -59,13 +62,11 @@ export async function update(req: Request, res: Response, next: NextFunction) {
       req.user!.role,
       req.body,
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Task updated successfully",
-        data: task,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Task updated successfully",
+      data: task,
+    });
   } catch (err) {
     next(err);
   }

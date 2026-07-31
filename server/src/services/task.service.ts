@@ -63,21 +63,83 @@ export async function getProjectTasks(
   projectId: string,
   userId: string,
   userRole: string,
-  filters: TaskFilterInput,
+  filters: TaskFilterInput & {
+    page?: number;
+    limit?: number;
+    search?: string;
+    sort?: string;
+  },
 ) {
   await ensureProjectAccess(projectId, userId, userRole);
 
-  const query: Record<string, unknown> = { project: projectId };
-  if (filters.status) query.status = filters.status;
-  if (filters.priority) query.priority = filters.priority;
-  if (filters.assignee) query.assignee = filters.assignee;
+  const page = Number(filters.page) || 1;
+  const limit = Number(filters.limit) || 10;
+  const skip = (page - 1) * limit;
 
-  const tasks = await Task.find(query)
-    .populate("creator", "name email")
-    .populate("assignee", "name email")
-    .sort({ createdAt: -1 });
+  const query: Record<string, unknown> = {
+    project: projectId,
+  };
 
-  return tasks;
+  if (filters.status) {
+    query.status = filters.status;
+  }
+
+  if (filters.priority) {
+    query.priority = filters.priority;
+  }
+
+  if (filters.assignee) {
+    query.assignee = filters.assignee;
+  }
+
+  if (filters.search) {
+    query.title = {
+      $regex: filters.search,
+      $options: "i",
+    };
+  }
+
+  let sort: Record<string, 1 | -1> = {
+    createdAt: -1,
+  };
+
+  switch (filters.sort) {
+    case "oldest":
+      sort = { createdAt: 1 };
+      break;
+
+    case "dueDate":
+      sort = { dueDate: 1 };
+      break;
+
+    case "priority":
+      sort = { priority: -1 };
+      break;
+
+    default:
+      sort = { createdAt: -1 };
+  }
+
+  const [tasks, total] = await Promise.all([
+    Task.find(query)
+      .populate("creator", "name email")
+      .populate("assignee", "name email")
+      .sort(sort)
+      .skip(skip)
+      .limit(limit),
+
+    Task.countDocuments(query),
+  ]);
+
+  return {
+    data: tasks,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 }
 
 export async function getTaskById(

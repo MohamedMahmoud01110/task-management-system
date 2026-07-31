@@ -12,7 +12,7 @@ export const createProjectSchema = z.object({
 export const updateProjectSchema = createProjectSchema.partial();
 
 export const addMemberSchema = z.object({
-  userId: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid user ID"),
+  email: z.string().email(),
 });
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;

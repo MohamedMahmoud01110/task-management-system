@@ -31,6 +31,14 @@ export const taskFilterSchema = z.object({
     .enum([TaskPriority.LOW, TaskPriority.MEDIUM, TaskPriority.HIGH])
     .optional(),
   assignee: objectId.optional(),
+
+  page: z.coerce.number().optional(),
+
+  limit: z.coerce.number().optional(),
+
+  search: z.string().optional(),
+
+  sort: z.enum(["newest", "oldest", "dueDate", "priority"]).optional(),
 });
 
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;

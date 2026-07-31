@@ -18,11 +18,17 @@ export async function create(req: Request, res: Response, next: NextFunction) {
 }
 export async function getAll(req: Request, res: Response, next: NextFunction) {
   try {
-    const projects = await projectService.getUserProjects(
+    const result = await projectService.getUserProjects(
       req.user!.userId,
       req.user!.role,
+      req.query,
     );
-    res.status(200).json({ success: true, total: projects.length, data: projects });
+
+    res.status(200).json({
+      success: true,
+      data: result.data,
+      pagination: result.pagination,
+    });
   } catch (err) {
     next(err);
   }
@@ -84,7 +90,7 @@ export async function addMember(
       req.params.projectId as string,
       req.user!.userId,
       req.user!.role,
-      req.body.userId,
+      req.body.email,
     );
     res.status(200).json({
       success: true,
@@ -96,7 +102,11 @@ export async function addMember(
   }
 }
 
-export async function  getMembers(req: Request, res: Response, next: NextFunction) {
+export async function getMembers(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   try {
     const members = await projectService.getMembers(
       req.params.projectId as string,
@@ -121,7 +131,11 @@ export async function removeMember(
       req.user!.role,
       req.params.userId as string,
     );
-    res.status(200).json({ success: true, message: "Member removed successfully", data: project });
+    res.status(200).json({
+      success: true,
+      message: "Member removed successfully",
+      data: project,
+    });
   } catch (err) {
     next(err);
   }

@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: ./server
+
+    container_name: task-manager-api
+
+    ports:
+      - "3000:3000"
+
+    env_file:
+      - ./server/.env
+
+  frontend:
+    build: ./client
+
+    container_name: task-manager-web
+
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - backend

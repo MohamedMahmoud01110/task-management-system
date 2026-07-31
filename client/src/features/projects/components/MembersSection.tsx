@@ -50,36 +50,46 @@ export function MembersSection({ members, ownerId, projectId }: Props) {
             key={member._id}
             className="flex items-center justify-between rounded-lg border p-3"
           >
-            <div className="flex items-center gap-3">
+            {/* Left Side */}
+            <div className="flex min-w-0 items-center gap-3">
               <Avatar>
-                <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback>
+                  {member.name.charAt(0).toUpperCase()}
+                </AvatarFallback>
               </Avatar>
 
-              <div>
-                <p className="font-medium">{member.name}</p>
+              <div className="min-w-0">
+                <p className="truncate font-medium">{member.name}</p>
 
-                <p className="text-sm text-muted-foreground">{member.email}</p>
+                <p className="truncate text-sm text-muted-foreground">
+                  {member.email}
+                </p>
               </div>
             </div>
 
-            {member._id === ownerId ? (
-              <span className="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
-                Owner
-              </span>
-            ) : (
-              <span className="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-yellow-500">
-                Member
-              </span>
-            )}
-            <Button
-              className="cursor-pointer text-red-600 hover:text-red-700"
-              onClick={() => toggleDialog(member._id, member.name)}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-            </Button>
+            {/* Right Side */}
+            <div className="ml-4 flex shrink-0 items-center gap-3">
+              {member._id === ownerId ? (
+                <span className="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
+                  Owner
+                </span>
+              ) : (
+                <span className="rounded bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-700">
+                  Member
+                </span>
+              )}
+
+              <Button
+                className="cursor-pointer text-red-600 hover:text-red-700"
+                onClick={() => toggleDialog(member._id, member.name)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         ))}
       </div>
+
       <DeleteDialog
         open={openDialog}
         onOpenChange={setOpenDialog}
