@@ -172,7 +172,10 @@ export async function addMember(
   }
 
   if (user.role !== UserRole.MEMBER) {
-    throw new AppError("User is not a member of this project", 409);
+    throw new AppError(
+      "Only members can be added to a project (admins manage projects but are not added as members)",
+      409,
+    );
   }
 
   const alreadyMember = project.members.some(
