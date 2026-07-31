@@ -18,7 +18,7 @@ export function Navbar() {
     <header className="flex h-16 items-center justify-between border-b bg-white px-6">
       <div className="flex justify-center items-center gap-2">
         <img
-          src="../../../public/logo.png"
+          src="/logo.png"
           className="w-10 h-10"
           alt="logo image"
         />
