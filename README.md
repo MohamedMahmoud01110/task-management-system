@@ -250,20 +250,28 @@ Example Accounts:
 
 ```
 Email:
-admin@test.com
+admin12@gmail.com
 
 Password:
-Admin123@
+admin12@@
 ```
 
 ### Member
 
 ```
 Email:
-member@test.com
+ahmedhussein@gmail.com
 
 Password:
-Member123@
+ahmed12@@
+```
+
+```
+Email:
+sara@example.com
+
+Password:
+sara12@@
 ```
 
 ---
