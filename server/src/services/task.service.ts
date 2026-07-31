@@ -1,5 +1,6 @@
 import { Task } from "../models/task.model";
 import { Project } from "../models/project.model";
+import { AuditLog } from "../models/auditLog.model";
 import { AppError } from "../utils/AppError";
 import {
   CreateTaskInput,
@@ -184,6 +185,8 @@ export async function updateTask(
     }
   }
 
+  const oldStatus = task.status;
+
   if (input.title !== undefined) task.title = input.title;
   if (input.description !== undefined) task.description = input.description;
   if (input.status !== undefined) task.status = input.status;
@@ -192,6 +195,16 @@ export async function updateTask(
   if (input.assignee !== undefined) task.assignee = input.assignee as any;
 
   await task.save();
+
+  if (input.status !== undefined && input.status !== oldStatus) {
+    await AuditLog.create({
+      task: task._id,
+      changedBy: userId,
+      oldStatus,
+      newStatus: input.status,
+    });
+  }
+
   return task;
 }
 
@@ -209,4 +222,24 @@ export async function deleteTask(
   }
 
   await task.deleteOne();
+}
+
+export async function getTaskAuditLog(
+  projectId: string,
+  taskId: string,
+  userId: string,
+  userRole: string,
+) {
+  await ensureProjectAccess(projectId, userId, userRole);
+
+  const task = await Task.findOne({ _id: taskId, project: projectId });
+  if (!task) {
+    throw new AppError("Task not found", 404);
+  }
+
+  const logs = await AuditLog.find({ task: taskId })
+    .populate("changedBy", "name email")
+    .sort({ createdAt: -1 });
+
+  return logs;
 }

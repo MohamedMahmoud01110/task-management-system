@@ -87,3 +87,21 @@ export async function remove(req: Request, res: Response, next: NextFunction) {
     next(err);
   }
 }
+
+export async function getAuditLog(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const logs = await taskService.getTaskAuditLog(
+      req.params.projectId as string,
+      req.params.taskId as string,
+      req.user!.userId,
+      req.user!.role,
+    );
+    res.status(200).json({ success: true, data: logs });
+  } catch (err) {
+    next(err);
+  }
+}

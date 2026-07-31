@@ -82,5 +82,17 @@ router.patch("/:taskId", validate(updateTaskSchema), taskController.update);
  *         description: Task deleted
  */
 router.delete("/:taskId", taskController.remove);
-
+/**
+ * @swagger
+ * /projects/{projectId}/tasks/{taskId}/audit-log:
+ *   get:
+ *     summary: Get task status change history
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Audit log retrieved
+ */
+router.get("/:taskId/audit-log", taskController.getAuditLog);
 export default router;
